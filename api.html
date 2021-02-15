@@ -1,0 +1,173 @@
+<!doctype html>
+<html>
+ <head>
+  <meta charset="utf-8">
+  <title>Video Watcher</title>
+  <link rel="stylesheet" href="http://www.teaching-materials.org/common/css/bootstrap.min.css">
+  <style type="text/css">
+  /* This puts titles always on a separate line from thumbnails */
+  #videos-list img {
+    display: block;
+  }
+  </style>
+ </head>
+ <body>
+   <iframe width="560" height="315" src="https://www.youtube.com/embed/HwSKkKrUzUk" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+   <a href="https://www.pinterest.com/pin/139752394664775546/"
+      data-pin-do="embedPin"><img src="https://image.flaticon.com/icons/png/512/145/145808.png" alt="" width="200px">
+   </a><a href="https://www.pinterest.com/<your-profile-here>/"
+   data-pin-do="buttonFollow">
+   -Your profile name here-
+</a>
+<div class="container">
+
+ <div class="row">
+   <div class="col-md-12">
+    <h2 class="page-header">Best Videos Ever ❤</h2>
+   </div>
+ </div>
+
+ <div class="row">
+   <div class="col-md-3">
+     <ul id="videos-list">
+    </ul>
+   </div>
+   <div class="col-md-9" id="video-watcher">
+   </div>
+ </div>
+
+ <div style="text-align:center; margin-top: 30px; clear:both;">
+  <a href="https://info.flagcounter.com/nEFy"><img src="https://s04.flagcounter.com/count/nEFy/bg_FFFFFF/txt_000000/border_CCCCCC/columns_2/maxflags_12/viewers_0/labels_0/pageviews_0/flags_0/" alt="Flag Counter" border="0"></a>
+</div>
+
+</div>
+
+  <script type="text/javascript" src="http://www.teaching-materials.org/common/youtube.js"></script>
+  <script type="text/javascript" src="http://www.teaching-materials.org/common/js/jquery.min.js"></script>
+
+ <script>
+
+ function addVideoToList(video) {
+    var videoLink = $('<a>');
+    videoLink.append(video.title);
+    var linkUrl = videoLink.attr('href');
+    var thumbnailUrl = youtube.generateThumbnailUrl(video.youtubeId);
+    var thumbnailImg = $('<img>');
+    thumbnailImg.attr('src', thumbnailUrl);
+    videoLink.append(thumbnailImg);
+
+    videoLink.on('click', function(e) {
+        e.preventDefault();
+        var videoTitle = $('<h2>');
+        videoTitle.html(video.title + ' <small>' + video.author + '</small>');
+        var videoEmbed = $('<iframe></iframe>');
+        videoEmbed.attr('src', youtube.generateEmbedUrl(video.youtubeId) + '?autoplay=1');
+        videoEmbed.attr('width', 560);
+        videoEmbed.attr('height', 315);
+
+        var videoRating = $('<img></img>');
+        videoRating.attr('src', 'https://chart.googleapis.com/chart?chs=225x125&cht=gom&chd=t:' + video.rating);
+
+        var videoWatcher = $('#video-watcher');
+        videoWatcher.hide();
+        videoWatcher.empty();
+        videoWatcher.append(videoTitle);
+        videoWatcher.append(videoEmbed);
+        videoWatcher.append(videoRating);
+        videoWatcher.fadeIn();
+    });
+
+    var videoItem = $('<li>');
+    videoItem.append(videoLink);
+    $('#videos-list').append(videoItem);
+ }
+
+var videos = [
+  {"youtubeId": "TddFnTB_7IM",
+    "title": "Trip through the 80s",
+    "author": "meliberty",
+    "rating": 90
+  },
+  {"youtubeId": "HwSKkKrUzUk",
+    "title": "Circle of Life",
+    "author": "parkerjademerce",
+    "rating": 70
+  },
+  {"youtubeId": "il2IrgFHfsg",
+    "title": "The Ooooh Cat",
+    "author": "RnBTree",
+    "rating": 60
+  },
+  {"youtubeId": "epUk3T2Kfno",
+    "title": "Otters Holding Hands",
+    "author": "cynthiaholmes",
+    "rating": 100
+  }
+]
+
+for (var i = 0; i < videos.length; i++) {
+   addVideoToList(videos[i]);
+}
+
+ </script><script type="text/javascript">
+(function(d){
+    var f = d.getElementsByTagName('SCRIPT')[0], p = d.createElement('SCRIPT');
+    p.type = 'text/javascript';
+    p.async = true;
+    p.src = '//assets.pinterest.com/js/pinit.js';
+    f.parentNode.insertBefore(p, f);
+}(document));
+</script>
+ <script
+    type="text/javascript"
+    async defer
+    src="//assets.pinterest.com/js/pinit.js"
+></script><script
+    type="text/javascript"
+    async defer
+    src="//assets.pinterest.com/js/pinit.js"
+></script>
+<script src="https://apis.google.com/js/api.js"></script>
+<script>
+  /**
+   * Sample JavaScript code for youtube.search.list
+   * See instructions for running APIs Explorer code samples locally:
+   * https://developers.google.com/explorer-help/guides/code_samples#javascript
+   */
+
+  function authenticate() {
+    return gapi.auth2.getAuthInstance()
+        .signIn({scope: "https://www.googleapis.com/auth/youtube.force-ssl"})
+        .then(function() { console.log("Sign-in successful"); },
+              function(err) { console.error("Error signing in", err); });
+  }
+  function loadClient() {
+    gapi.client.setApiKey("YOUR_API_KEY");
+    return gapi.client.load("https://www.googleapis.com/discovery/v1/apis/youtube/v3/rest")
+        .then(function() { console.log("GAPI client loaded for API"); },
+              function(err) { console.error("Error loading GAPI client for API", err); });
+  }
+  // Make sure the client is loaded and sign-in is complete before calling this method.
+  function execute() {
+    return gapi.client.youtube.search.list({
+      "channelType": "show",
+      "eventType": "none",
+      "forContentOwner": true,
+      "forDeveloper": false,
+      "forMine": false
+    })
+        .then(function(response) {
+                // Handle the results here (response.result has the parsed body).
+                console.log("Response", response);
+              },
+              function(err) { console.error("Execute error", err); });
+  }
+  gapi.load("client:auth2", function() {
+    gapi.auth2.init({client_id: "YOUR_CLIENT_ID"});
+  });
+</script>
+<button onclick="authenticate().then(loadClient)">authorize and load</button>
+<button onclick="execute()">execute</button>
+
+ </body>
+</html>
